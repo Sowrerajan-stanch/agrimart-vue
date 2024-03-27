@@ -1,0 +1,55 @@
+<head>
+	<title>Orders</title>
+</head>
+<body>
+	<header>
+	{% include "templates/includes/_navbar.html" %}
+	</header>
+	<div class="py-5 container">
+		{% block content %}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Order id</th>
+					<th>Ordered Date</th>
+					<th>Total Amount</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody class="orders-table">
+				
+			</tbody>
+		</table>
+		{% endblock %}
+	</div>
+</body>
+<script>
+	$(this).ready(function(){
+		var agriuser = JSON.parse(localStorage.getItem("agriuser"))
+		if(!agriuser.isLoggedIn){
+			window.location.href = "/users/login"
+			return;
+		}
+		$.ajax({
+			type:"GET",
+			url:"http://agri-app.localhost:8002/api/method/agriapp.agriuser.fetch_orders",
+			data:{
+				"user":agriuser.user.userId
+			},
+			success: function(response) {
+				response.message.forEach(function(order){
+					var row = "<tr>" + 
+						"<td>" + order.order_id + "</td>" +
+						"<td>" + order.ordered_date + "</td>" +
+						"<td>" + order.total_amount + "</td>" +
+						"<td>" + order.status + "</td>" + "</tr>"
+						$(".orders-table").append(row)
+				})
+			},
+			error: function(xhr, status, error) {
+				alert('fetching ' + error);
+				console.log(error)
+			}
+		})
+	})
+</script>

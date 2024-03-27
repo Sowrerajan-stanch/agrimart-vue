@@ -1,0 +1,49 @@
+<head>
+	<title>Farmer</title>
+</head>
+{% include "templates/includes/_nav-admin.html" %}
+<body>
+	<div class="container py-5">
+		<h2>Farmer Details</h2>
+		<p>User Name: <span class="full-name"></span></p>
+		<p>Email: <span class="email"></span></p>
+		<p>Address: <span class="address"></span></p>
+		<h2>Products</h2>
+		
+	</div>
+	
+
+</body>
+<script>
+	$(this).ready(function(){
+		var farmer = JSON.parse(localStorage.getItem("agri-admin"))
+		if(!farmer.isLoggedIn){
+			window.location.href = "/farmer/login"
+			return;
+		}
+		$(".full-name").text(farmer.farmer.username)
+		$(".email").text(farmer.farmer.email)
+		$(".address").text(farmer.farmer.address)
+		$.ajax({
+			type:"GET",
+			url:`http://agri-app.localhost:8002/api/resource/Farmer/${farmer.farmer.farmerId}`,
+			success:function(response){
+				const selling_products = response.data.selling_products
+				selling_products.forEach((product,index)=>{
+					var row = "<tr>"+
+						 "<td>" + eval(index+1) + "</td>" +
+						 "<td>" + product.product_name + "</td>" +
+						 "<td>" + product.product_desc + "</td>" +
+						 "<td>" + product.product_price + "</td>" + "</tr>";
+					
+					$(".farmer-products").append(row)	
+
+				})
+			},
+			error:function(xhr,status,error){
+				alert("Fetch Error!")
+				console.log(error)
+			}
+		})
+	})
+</script>

@@ -1,0 +1,28 @@
+<head>
+	<title>Users</title>
+</head>
+{% include "templates/includes/_navbar.html" %}
+<body>
+	<div class="container py-5">
+		<h2>User Details</h2>
+		<p>Full Name: <span class="full-name"></span></p>
+		<p>Email: <span class="email"></span></p>
+		<p>Address: <span class="address"></span></p>
+	</div>
+
+
+</body>
+<script>
+	$(this).ready(function(){
+		var agriuser = JSON.parse(localStorage.getItem("agriuser"))
+		console.log(agriuser)
+		if(!agriuser.isLoggedIn){
+			window.location.href = "/users/login"
+			return;
+		}
+		$(".full-name").text(agriuser.user.fullname)
+		$(".email").text(agriuser.user.email)
+		$(".address").text(agriuser.user.address)
+
+	})
+</script>

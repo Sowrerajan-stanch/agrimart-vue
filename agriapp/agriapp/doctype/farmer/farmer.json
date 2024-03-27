@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "FR.####",
+ "creation": "2024-03-23 12:09:39.585214",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "farmer_details_section",
+  "username",
+  "password",
+  "location",
+  "column_break_wuvy",
+  "email",
+  "role",
+  "products_tab",
+  "products_section",
+  "product_name",
+  "product_desc",
+  "product_price",
+  "product_details_section",
+  "selling_products",
+  "buyers_details_tab",
+  "buyers_section",
+  "users"
+ ],
+ "fields": [
+  {
+   "fieldname": "farmer_details_section",
+   "fieldtype": "Section Break",
+   "label": "Farmer Details"
+  },
+  {
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "label": "Username"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Password",
+   "label": "Password"
+  },
+  {
+   "default": "FARMER",
+   "fieldname": "role",
+   "fieldtype": "Read Only",
+   "hidden": 1,
+   "label": "Role"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "fieldname": "column_break_wuvy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "products_tab",
+   "fieldtype": "Tab Break",
+   "label": "Products"
+  },
+  {
+   "fieldname": "products_section",
+   "fieldtype": "Section Break",
+   "label": "Products"
+  },
+  {
+   "fieldname": "product_name",
+   "fieldtype": "Data",
+   "label": "Product Name"
+  },
+  {
+   "fieldname": "product_desc",
+   "fieldtype": "Data",
+   "label": "Product Description"
+  },
+  {
+   "fieldname": "product_price",
+   "fieldtype": "Data",
+   "label": "Product Price"
+  },
+  {
+   "fieldname": "buyers_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Buyers details"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "product_details_section",
+   "fieldtype": "Section Break",
+   "label": "Product Details"
+  },
+  {
+   "fieldname": "selling_products",
+   "fieldtype": "Table",
+   "label": "Selling products",
+   "options": "Farmer-Products"
+  },
+  {
+   "fieldname": "buyers_section",
+   "fieldtype": "Section Break",
+   "label": "Buyers"
+  },
+  {
+   "fieldname": "users",
+   "fieldtype": "Table",
+   "label": "users",
+   "options": "Buyers"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-24 15:40:24.298391",
+ "modified_by": "Administrator",
+ "module": "Agriapp",
+ "name": "Farmer",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

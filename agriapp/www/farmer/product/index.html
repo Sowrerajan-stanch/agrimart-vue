@@ -1,0 +1,146 @@
+<head>
+	<title>Farmer</title>
+</head>
+{% include "templates/includes/_nav-admin.html" %}
+<section class="vh-100" >
+	<div class="container h-100">
+	  <div class="row d-flex justify-content-center align-items-center h-100">
+		<div class="col-xl-9">
+		  <div class="card" style="border-radius: 15px;">
+			<div class="card-body">
+  
+			  <div class="row align-items-center pt-4 pb-3">
+				<div class="col-md-3 ps-5">
+  
+				  <h6 class="mb-0">Product Name</h6>
+  
+				</div>
+				<div class="col-md-9 pe-5">
+  
+				  <input type="text" class="form-control form-control-lg product-name" placeholder="Enter Product Name" />
+  
+				</div>
+			  </div>
+  
+			  <hr class="mx-n3">
+  
+			  <div class="row align-items-center py-3">
+				<div class="col-md-3 ps-5">
+  
+				  <h6 class="mb-0">Product Description</h6>
+  
+				</div>
+				<div class="col-md-9 pe-5">
+  
+				  <input type="text" class="form-control form-control-lg product-desc" placeholder="Enter Product Description" />
+  
+				</div>
+			  </div>
+  
+			  <hr class="mx-n3">
+  
+			  <div class="row align-items-center py-3">
+				<div class="col-md-3 ps-5">
+  
+				  <h6 class="mb-0">Product Price</h6>
+  
+				</div>
+				<div class="col-md-9 pe-5">
+  
+  				  <input type="text" class="form-control form-control-lg product-price" placeholder="Enter Product Price" />
+
+				</div>
+			  </div>
+  
+  
+			  <div class="px-5 py-4">
+				<button class="btn btn-primary btn-lg add-product">Add product</button>
+			  </div>
+  
+			</div>
+		  </div>
+  
+		</div>
+		<h2>Products</h2>
+		<table class="table">
+		  <thead>
+			  <tr>
+				  <th>No.</th>
+				  <th>Product Name</th>
+				  <th>Product Description</th>
+				  <th>Price</th>
+			  </tr>
+			  <tbody class="farmer-products">
+  
+			  </tbody>
+		  </thead>
+	  </div>
+	</table>
+	</div>
+  </section>
+  <script>
+	$(this).ready(function(){
+		var farmer = JSON.parse(localStorage.getItem("agri-admin"))
+		if(!farmer.isLoggedIn){
+						window.location.href = "/farmer/login"
+			return;
+		}
+
+		$.ajax({
+			type:"GET",
+			url:`http://agri-app.localhost:8002/api/resource/Farmer/${farmer.farmer.farmerId}`,
+			success:function(response){
+				const selling_products = response.data.selling_products
+				selling_products.forEach((product,index)=>{
+					var row = "<tr>"+
+						 "<td>" + eval(index+1) + "</td>" +
+						 "<td>" + product.product_name + "</td>" +
+						 "<td>" + product.product_desc + "</td>" +
+						 "<td>" + product.product_price + "</td>" + 
+						"</tr>";
+					
+					$(".farmer-products").append(row)	
+
+				})
+			},
+			error:function(xhr,status,error){
+				alert("Fetch Error!")
+				console.log(error)
+			}
+		})
+
+		$(".add-product").click(function(){
+			var product_name = $(".product-name").val()
+			var product_desc = $(".product-desc").val()
+			var product_price = $(".product-price").val()
+			if(!product_name || !product_desc || !product_price){
+				alert("Fill up Every Fields")
+				return;
+			}
+
+			$.ajax({
+				type:"POST",
+				url:"http://agri-app.localhost:8002/api/method/agriapp.farmer.add_product",
+				data:{
+					product_name:product_name,
+					product_description:product_desc,
+					product_price:product_price,
+					farmer:farmer.farmer.farmerId
+				},
+				headers:{
+					"X-Frappe-CSRF-Token":"c4bb18b041bcf294aa174632ee63b90d30c7585ea5c31c9dea91fa9f"
+				},
+				success:function(response){
+					alert("Product Succesfully Added!")
+					location.reload()
+					
+				},
+				error:function(xhr,status,error){
+					alert("Product addition error "+error)
+					console.log(error)
+				}
+			})
+		})
+
+	})
+</script>

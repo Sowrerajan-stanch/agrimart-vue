@@ -1,0 +1,87 @@
+<head>
+	<link
+		rel="stylesheet"
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+		crossorigin="anonymous"
+	/>
+</head>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="/farmer">Agrimart</a>
+		<button
+			class="navbar-toggler"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0 isLoggedIn">
+				<li class="nav-item">
+					<a class="nav-link active is" aria-current="page" href="/farmer">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/farmer/product">Products</a>
+				</li>
+			
+			</ul>
+		</div>
+		<div class="isNotLoggedIn ">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="http://agri-app.localhost:8002/agrimart-user/new"  >Signup</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/users/login">Signin</a>
+				</li>
+				
+			</ul>
+		</div>
+		<div class="isLoggedIn">
+			<ul class="navbar-nav">
+
+				<li class="nav-item isLoggedIn sign-out-btn">
+					<a class="nav-link" href="#">Sign out</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+	integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+	crossorigin="anonymous"
+	referrerpolicy="no-referrer"
+></script>
+<script>
+	$(this).ready(function(){
+		var farmer = JSON.parse(localStorage.getItem("agri-admin"))
+		if(!farmer.isLoggedIn){
+			$(".isNotLoggedIn").show()
+			$(".isLoggedIn").hide()
+		}
+		if(farmer.isLoggedIn){
+			$(".isNotLoggedIn").hide()
+			$(".isLoggedIn").show()
+			console.log("Hellp")
+
+		}
+		$(".sign-out-btn").click(function(){
+			localStorage.setItem("agri-admin",JSON.stringify({
+				isLoggedIn:false,
+				farmer:{}
+			}))
+			alert("Signed out succesfully!")
+			window.location.href="/farmer/login"
+		})
+	
+	})
+</script>

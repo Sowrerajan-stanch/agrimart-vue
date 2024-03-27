@@ -1,0 +1,192 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "US.####",
+ "creation": "2024-03-23 11:49:19.091691",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "user_details_tab",
+  "user_details_section",
+  "full_name",
+  "password",
+  "address",
+  "column_break_kweq",
+  "email",
+  "role",
+  "orders",
+  "ordered_products",
+  "ordered_items_tab",
+  "orders_section",
+  "cart",
+  "total",
+  "products_tab",
+  "products_section",
+  "product",
+  "product_name",
+  "farmer_name",
+  "farmer_id",
+  "column_break_crbd",
+  "product_price",
+  "quantity"
+ ],
+ "fields": [
+  {
+   "fieldname": "user_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "User Details"
+  },
+  {
+   "fieldname": "user_details_section",
+   "fieldtype": "Section Break",
+   "label": "User Details"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Password",
+   "in_list_view": 1,
+   "label": "password",
+   "reqd": 1
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Text",
+   "label": "Address",
+   "max_height": "100px"
+  },
+  {
+   "fieldname": "column_break_kweq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "default": "USER",
+   "fieldname": "role",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Role"
+  },
+  {
+   "fieldname": "orders",
+   "fieldtype": "Section Break",
+   "label": "Orders"
+  },
+  {
+   "fieldname": "ordered_products",
+   "fieldtype": "Table",
+   "label": "Ordered Products",
+   "options": "Order"
+  },
+  {
+   "fieldname": "ordered_items_tab",
+   "fieldtype": "Tab Break",
+   "label": "Ordered Items"
+  },
+  {
+   "fieldname": "orders_section",
+   "fieldtype": "Section Break",
+   "label": "Orders"
+  },
+  {
+   "fieldname": "cart",
+   "fieldtype": "Table",
+   "label": "Cart",
+   "options": "Cart"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Read Only",
+   "label": "Total Amount"
+  },
+  {
+   "fieldname": "products_tab",
+   "fieldtype": "Tab Break",
+   "label": "Products"
+  },
+  {
+   "fieldname": "products_section",
+   "fieldtype": "Section Break",
+   "label": "Products"
+  },
+  {
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "label": "Product",
+   "options": "Product"
+  },
+  {
+   "fetch_from": "product.product_name",
+   "fieldname": "product_name",
+   "fieldtype": "Data",
+   "label": "Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "product.farmer_name",
+   "fieldname": "farmer_name",
+   "fieldtype": "Read Only",
+   "label": "Farmer name"
+  },
+  {
+   "fetch_from": "product.farmer",
+   "fieldname": "farmer_id",
+   "fieldtype": "Read Only",
+   "hidden": 1,
+   "label": "farmer_id"
+  },
+  {
+   "fieldname": "column_break_crbd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "product.product_price",
+   "fieldname": "product_price",
+   "fieldtype": "Data",
+   "label": "Price"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-24 11:58:57.034826",
+ "modified_by": "Administrator",
+ "module": "Agriapp",
+ "name": "AgriUser",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

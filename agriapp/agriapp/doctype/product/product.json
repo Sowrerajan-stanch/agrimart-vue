@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "PR.####",
+ "creation": "2024-03-23 13:21:33.705547",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "product_section",
+  "product_name",
+  "product_description",
+  "product_price",
+  "farmer",
+  "farmer_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "product_section",
+   "fieldtype": "Section Break",
+   "label": "Product"
+  },
+  {
+   "fieldname": "product_name",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fieldname": "product_description",
+   "fieldtype": "Data",
+   "label": "Description"
+  },
+  {
+   "fieldname": "product_price",
+   "fieldtype": "Data",
+   "label": "Price"
+  },
+  {
+   "fieldname": "farmer",
+   "fieldtype": "Link",
+   "label": "Farmer",
+   "options": "Farmer"
+  },
+  {
+   "fetch_from": "farmer.username",
+   "fieldname": "farmer_name",
+   "fieldtype": "Read Only",
+   "label": "Farmer name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-24 14:05:56.967008",
+ "modified_by": "Administrator",
+ "module": "Agriapp",
+ "name": "Product",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

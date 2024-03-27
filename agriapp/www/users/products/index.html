@@ -1,0 +1,101 @@
+
+<head>
+	<title>Products</title>
+</head>
+<body>
+	<header>
+	{% include "templates/includes/_navbar.html" %}
+	</header>
+	{% block content %}
+	{% if product%}
+	<div class="position-absolute container bg-white  d-flex align-items-center justify-content-center" style="height: 100vh;" >
+		<div class="p-5 rounded">
+			<a href="/users/products" style="text-decoration: none;" class="text-danger text-end">X</a>
+			<div>
+				<p>{{product.product_name}}</p>
+				<p >{{product.product_price}}</p>
+				<p>{{product.product_description}}</p>		
+				<input type="number" placeholder="Enter Quantity" class="quantity">
+				<button class="btn btn-primary add-to-cart" data-product-id="{{product.name}}" data-product-price="{{product.product_price}}">Add to Cart</button>
+
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="position-relative">
+		<div class="container py-5 d-flex flex-row justify-content-around flex-wrap">
+			{% for product in products %}
+			<div class="card my-3">
+				{% set p = frappe.get_doc("Product",product) %}
+				<div class="card-body">
+					<a style="text-decoration: none;" href="/users/products?id={{product}}"><p class="card-title">{{p.product_name}}</p></a>
+					<p class="card-text">Rs. {{p.product_price}}</p>
+					<p class="card-text">{{p.product_description}}</p>
+					<button class="btn btn-primary add_to_cart" data-product_id="{{product}}">Add to Cart</button>
+				</div>
+			</div>
+			{% endfor %}
+
+		</div>
+	</div>
+	{% endif %}
+
+	{% endblock %}
+</div>
+	
+	<script>
+		$(document).ready(function() {
+			var agriuser = JSON.parse(localStorage.getItem("agriuser"))
+			
+			$(".add_to_cart").click(function(){
+				if(!agriuser.isLoggedIn){
+					alert("User need to be created!")
+					return;
+				}
+				var product = $(this).data().product_id
+				window.location.href = `/users/products?id=${product}`
+			})
+			$(".add-to-cart").click(function(){
+				if(!agriuser.isLoggedIn){
+					alert("User need to be created!")
+					return;
+				}
+				var product = $(this).data().productId
+				var quantity = parseInt($(".quantity").val())
+				var price = parseInt($(this).data("product-price"))
+				console.log(product,quantity)
+				if(!quantity){
+					alert("Please enter correct quantity")
+					return;
+				}
+				try{	
+					$.ajax({
+						type:"GET",
+						url: 'http://agri-app.localhost:8002/api/method/agriapp.agriuser.add_to_cart',
+						data:{
+							"product_id":product,
+							"quantity":quantity,
+							"user":agriuser.user.userId,
+							"total_amount":quantity * price,
+							
+						},
+						success: function(response) {
+							alert('Product added to cart successfully!');
+							if(response.message){
+								window.location.href = "/users/cart"
+							}
+						},
+						error: function(xhr, status, error) {
+							alert('Error adding product to cart: ' + error);
+							console.log(error)
+						}
+					})
+				}catch(err){
+					console.log(err)
+				}
+				
+			})
+		})
+	</script>
+</body>
+
