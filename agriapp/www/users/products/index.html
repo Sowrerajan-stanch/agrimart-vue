@@ -137,10 +137,15 @@
 							total_amount: parseInt(quantity * price),
 						},
 						success: function (response) {
-							alert("Product added to cart successfully!");
-							if (response.message) {
-								window.location.href = "/users/cart";
+							if(response.message.error){
+								$(".quantity").val('')
+								alert(response.message.error);
+								window.location.reload()
+							}else{
+								alert("Product added to cart successfully!");
+
 							}
+						
 						},
 						error: function (xhr, status, error) {
 							alert("Error adding product to cart: " + error);

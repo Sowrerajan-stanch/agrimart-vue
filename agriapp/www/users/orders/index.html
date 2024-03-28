@@ -5,40 +5,52 @@
     <header>
         {% include "templates/includes/_navbar.html" %}
     </header>
-    <div class="py-5 container">
-        {% block content %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Order id</th>
-                    <th>Ordered Date</th>
-                    <th>Total Amount</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody class="orders-table">
-                
-            </tbody>
-        </table>
-        {% endblock %}
-    </div>
+    <div class="position-relative">
 
-    <!-- Order Details Modal -->
-    <div class="modal fade" id="orderDetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="orderDetailsBody">
-                    <!-- Order details will be displayed here -->
-                </div>
-            </div>
+        <div class="py-5 container">
+            {% block content %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Order id</th>
+                        <th>Ordered Date</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody class="orders-table">
+                    
+                </tbody>
+            </table>
+            {% endblock %}
+        </div>
+        <div class="position-relative">
+
+            <div class="position-absolute top-50 start-50 translate-middle bg-white p-4 order-details border border-success rounded" style="display:none">
+                <h3>Order Details</h3>
+                <p>Order Id: <span class="orderId"></span></p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>No.</td>
+                            <td>Product Name</td>
+                            <td>Product Price</td>
+                            <td>Product Quantity</td>
+                            <td>Amount</td>
+                        </tr>
+                    </thead>
+                    <tbody class="productBody">
+                        
+                    </tbody>
+                </table>
+                <p>Total Amount: <span class="order-total-amount "></span></p>
+                <p>Status: <span class="order-status text-success"></span></p>
+                <button class="btn btn-danger mt-3 close-order-details">Close</button>
+               </div>
         </div>
     </div>
+ 
 </body>
 <script>
     $(document).ready(function(){
@@ -48,6 +60,9 @@
             return;
         }
 
+        $(".close-order-details").click(function() {
+            $(".order-details").hide();
+        }); 
         function showOrderDetails(orderId) {
             $.ajax({
                 type: "GET",
@@ -60,8 +75,23 @@
 					order_id:orderId
 				},
                 success: function(response) {
-                    $("#orderDetailsBody").html(response);
-                    $("#orderDetailsModal").modal("show");
+                    console.log(response.message)
+                    $("#productDetailsTableBody").empty();
+                    $(".orderId").text(orderId)
+                    response.message.products.forEach(function(product, index) {
+                        var row = "<tr>" +
+                            "<td>" + eval(index+1) + "</td>" +
+                            "<td>" + product.product_name + "</td>" +
+                            "<td>" + "Rs."+product.product_price + "</td>" +
+                            "<td>" + product.quantity + "</td>" +
+                            "<td>" + product.product_total_amount + "</td>" + 
+                            "</tr>";
+                        $(".productBody").append(row);
+                    });
+                    $(".order-total-amount").text("Rs."+response.message.total_amount)
+                    $(".order-status").text(response.message.status)
+            
+                    $(".order-details").show();
                 },
                 error: function(xhr, status, error) {
                     console.error("Error fetching order details: " + error);
@@ -76,9 +106,10 @@
                 "user": agriuser.user.userId
             },
             success: function(response) {
-                response.message.forEach(function(order) {
+                response.message.forEach(function(order,index) {
                     var row = "<tr>" + 
-                        "<td><a href='#' class='order-link' data-order-id='" + order.order_id + "'>" + order.order_id + "</a></td>" +
+                        "<td>" + eval(index+1) + "</td>" +
+                        "<td><a href='#' class='order-link' data-order-id='" + order.order_id + "' data-toggle='modal' data-target='#orderModal' >" + order.order_id + "</a></td>" +
                         "<td>" + order.ordered_date + "</td>" +
                         "<td>" + order.total_amount + "</td>" +
                         "<td>" + order.status + "</td>" +
