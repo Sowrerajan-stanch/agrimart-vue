@@ -1,55 +1,101 @@
 <head>
-	<title>Orders</title>
+    <title>Orders</title>
 </head>
 <body>
-	<header>
-	{% include "templates/includes/_navbar.html" %}
-	</header>
-	<div class="py-5 container">
-		{% block content %}
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Order id</th>
-					<th>Ordered Date</th>
-					<th>Total Amount</th>
-					<th>Status</th>
-				</tr>
-			</thead>
-			<tbody class="orders-table">
-				
-			</tbody>
-		</table>
-		{% endblock %}
-	</div>
+    <header>
+        {% include "templates/includes/_navbar.html" %}
+    </header>
+    <div class="py-5 container">
+        {% block content %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order id</th>
+                    <th>Ordered Date</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody class="orders-table">
+                
+            </tbody>
+        </table>
+        {% endblock %}
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="orderDetailsBody">
+                    <!-- Order details will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
-	$(this).ready(function(){
-		var agriuser = JSON.parse(localStorage.getItem("agriuser"))
-		if(!agriuser.isLoggedIn){
-			window.location.href = "/users/login"
-			return;
-		}
-		$.ajax({
-			type:"GET",
-			url:"http://agri-app.localhost:8002/api/method/agriapp.agriuser.fetch_orders",
-			data:{
-				"user":agriuser.user.userId
-			},
-			success: function(response) {
-				response.message.forEach(function(order){
-					var row = "<tr>" + 
-						"<td>" + order.order_id + "</td>" +
-						"<td>" + order.ordered_date + "</td>" +
-						"<td>" + order.total_amount + "</td>" +
-						"<td>" + order.status + "</td>" + "</tr>"
-						$(".orders-table").append(row)
-				})
-			},
-			error: function(xhr, status, error) {
-				alert('fetching ' + error);
-				console.log(error)
-			}
-		})
-	})
+    $(document).ready(function(){
+		var agriuser = JSON.parse(localStorage.getItem("agriuser")).isLoggedIn  ? JSON.parse(localStorage.getItem("agriuser")) : JSON.parse(sessionStorage.getItem("agriuser"))
+        if(!agriuser.isLoggedIn){
+            window.location.href = "/users/login";
+            return;
+        }
+
+        function showOrderDetails(orderId) {
+            $.ajax({
+                type: "GET",
+                url: `http://agri-app.localhost:8002/api/method/agriapp.agriuser.fetch_order_detail`,
+				headers:{
+					"Authorization":"token 6474c1a6460120b:3370ea920c64e26"
+				},
+				data:{
+					user:agriuser.user.userId,
+					order_id:orderId
+				},
+                success: function(response) {
+                    $("#orderDetailsBody").html(response);
+                    $("#orderDetailsModal").modal("show");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching order details: " + error);
+                }
+            });
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "http://agri-app.localhost:8002/api/method/agriapp.agriuser.fetch_orders",
+            data: {
+                "user": agriuser.user.userId
+            },
+            success: function(response) {
+                response.message.forEach(function(order) {
+                    var row = "<tr>" + 
+                        "<td><a href='#' class='order-link' data-order-id='" + order.order_id + "'>" + order.order_id + "</a></td>" +
+                        "<td>" + order.ordered_date + "</td>" +
+                        "<td>" + order.total_amount + "</td>" +
+                        "<td>" + order.status + "</td>" +
+                        "</tr>";
+                    $(".orders-table").append(row);
+                });
+                
+                // Click event handler for order links
+                $(".order-link").click(function(e) {
+                    e.preventDefault();
+                    var orderId = $(this).data("order-id");
+                    showOrderDetails(orderId);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching orders: " + error);
+            }
+        });
+    });
 </script>

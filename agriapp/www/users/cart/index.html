@@ -33,7 +33,7 @@
 <!-- </body> -->
 <script>
     $(document).ready(function () {
-        var agriuser = JSON.parse(localStorage.getItem("agriuser"));
+		var agriuser = JSON.parse(localStorage.getItem("agriuser")).isLoggedIn  ? JSON.parse(localStorage.getItem("agriuser")) : JSON.parse(sessionStorage.getItem("agriuser"))
         console.log(agriuser);
 
         if (!agriuser.isLoggedIn) {

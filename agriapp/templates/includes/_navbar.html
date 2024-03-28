@@ -68,20 +68,24 @@
 ></script>
 <script>
 	$(this).ready(function(){
-		var agriuser = JSON.parse(localStorage.getItem("agriuser"))
-		console.log(agriuser)
+		var agriuser = JSON.parse(localStorage.getItem("agriuser")).isLoggedIn  ? JSON.parse(localStorage.getItem("agriuser")) : JSON.parse(sessionStorage.getItem("agriuser")) === null ? JSON.parse(localStorage.getItem("agriuser")) : JSON.parse(sessionStorage.getItem("agriuser"))
+		console.log(JSON.parse(sessionStorage.getItem("agriuser")) )
 		if(!agriuser.isLoggedIn){
 			$(".isNotLoggedIn").show()
 			$(".isLoggedIn").hide()
-		}
-		if(agriuser.isLoggedIn){
+		}else{
 			$(".isNotLoggedIn").hide()
 			$(".isLoggedIn").show()
 			console.log("Hellp")
-
 		}
+
+		
 		$(".sign-out-btn").click(function(){
 			localStorage.setItem("agriuser",JSON.stringify({
+				isLoggedIn:false,
+				user:{}
+			}))
+			sessionStorage.setItem("agriuser",JSON.stringify({
 				isLoggedIn:false,
 				user:{}
 			}))

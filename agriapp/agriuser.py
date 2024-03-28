@@ -28,8 +28,7 @@ def authenticate_user(**args):
 def add_to_cart(**args):
     try:
         product_id = args.get('product_id')
-        quantity = args.get('quantity')
-        total_amount = args.get('total_amount')
+        quantity = int(args.get('quantity'))
         user_id = args.get('user')
         
         user = frappe.get_doc('AgriUser', user_id)
@@ -42,7 +41,7 @@ def add_to_cart(**args):
             "order_id": uuid.uuid4(),
             "ordered_date": datetime.now().strftime("%d-%m-%y"),
             "status": "unpaid",
-            "total_amount": total_amount,
+            "total_amount": quantity * int(product.product_price),
             "ordered_product_name": product.product_name,
             "ordered_product_price": product.product_price,
             "ordred_quanity": quantity,
@@ -86,7 +85,7 @@ def pay_products(**args):
                 "address": user.address,
                 "farmer":cart_item.farmer_id
             })
-            print(user.ordered_products)
+            
             farmer_doc = frappe.get_doc("Farmer", cart_item.farmer_id)
             buyer_detail = {
                 "farmer_id": cart_item.farmer_id,
@@ -120,12 +119,18 @@ def fetch_cart(**args):
     user = frappe.get_doc("AgriUser",args.get("user"))
     return user.cart
 	
-    
-    # Order_id
-    # ordered_date
-    # status
-    # total_amount
-    # user
-    #farmer
-    
+@frappe.whitelist(allow_guest=True)
+def fetch_order_detail(**args):
+    order = frappe.get_doc("Order",{
+        "order_id":args.get("order_id")
+    })
+
+    order_details = {
+        "order_id":order.order_id,
+        "ordered_date":order.ordered_date,
+        "status":order.status,
+        "products":order.products,
+    }
+    return order_details
+
     

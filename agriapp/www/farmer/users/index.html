@@ -1,0 +1,56 @@
+{% include "templates/includes/_nav-admin.html" %}
+<div class="container py-5">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>No.</th>
+				<th>Username</th>
+				<th>Ordered date</th>
+				<th>Product Name</th>
+				<th>Product Price</th>
+				<th>Quantity</th>
+				<th>Amount</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody class="users_brought">
+
+		</tbody>
+	</table>
+</div>
+<script>
+	$(this).ready(function(){
+		var farmer = JSON.parse(localStorage.getItem("agri-admin"))
+		if(!farmer.isLoggedIn){
+						window.location.href = "/farmer/login"
+			return;
+		}
+		$.ajax({
+			type:"GET",
+			url:`http://agri-app.localhost:8002/api/resource/Farmer/${farmer.farmer.farmerId}`,
+			success:function(response){
+				const users_brought = response.data.users
+				users_brought.forEach((users,index)=>{
+					var row = "<tr>"+
+						 "<td>" + eval(index+1) + "</td>" +
+						 "<td>" + users.username + "</td>" +
+						 "<td>" + users.ordered_date + "</td>" +
+						 "<td>" + users.product_name + "</td>" + 
+						 "<td>" + users.product_price + "</td>" + 
+						 "<td>" + users.quantity + "</td>" + 
+						 "<td>" + users.amount + "</td>" + 
+						 "<td>" + users.status + "</td>" + 
+						"</tr>";
+					
+					$(".users_brought").append(row)	
+
+				})
+				
+			},
+			error:function(xhr,status,error){
+				alert("Fetch Error!")
+				console.log(error)
+			}
+		})
+	})
+</script>

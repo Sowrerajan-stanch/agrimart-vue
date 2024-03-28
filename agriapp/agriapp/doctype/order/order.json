@@ -14,7 +14,8 @@
   "username",
   "address",
   "amended_from",
-  "farmer"
+  "farmer",
+  "products"
  ],
  "fields": [
   {
@@ -75,13 +76,19 @@
    "fieldname": "farmer",
    "fieldtype": "Read Only",
    "label": "Farmer"
+  },
+  {
+   "fieldname": "products",
+   "fieldtype": "Table",
+   "label": "products",
+   "options": "Products_list"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-24 15:52:57.387379",
+ "modified": "2024-03-28 11:39:05.632419",
  "modified_by": "Administrator",
  "module": "Agriapp",
  "name": "Order",

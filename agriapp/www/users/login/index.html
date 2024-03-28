@@ -95,6 +95,10 @@
 	$(this).ready(function(){
 			console.log($("#remember_me")[0].checked) 
 			const token = $(".csrf-token").data()["csrfToken"]
+			var agriuser = JSON.parse(localStorage.getItem("agriuser")).isLoggedIn  ? JSON.parse(localStorage.getItem("agriuser")) : JSON.parse(sessionStorage.getItem("agriuser")) === null ? JSON.parse(localStorage.getItem("agriuser")) : JSON.parse(sessionStorage.getItem("agriuser"))
+			if(agriuser.isLoggedIn){
+				window.location.href = "/users"
+			}
 		
 		$(".login-btn").click(function(){
 			var email = $(".email").val()
@@ -121,6 +125,11 @@
 							user:response.message.user_details
 						}))
 						
+					}else{
+						sessionStorage.setItem("agriuser",JSON.stringify({
+							"isLoggedIn":true,
+							user:response.message.user_details
+						}))
 					}
 					window.location.href = "/users"
 				},
