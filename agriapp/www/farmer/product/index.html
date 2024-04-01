@@ -86,6 +86,10 @@
 		$.ajax({
 			type: "GET",
 			url: `http://agri-app.localhost:8002/api/resource/Farmer/${farmer.farmer.farmerId}`,
+			headers:{
+				"X-Frappe-CSRF-Token":"2d82e54e954952b3339bb855c3a0464c7979f104f1220b13ecea1037",
+				//"Authorization"
+			},
 			success: function (response) {
 				const selling_products = response.data.selling_products;
 				selling_products.forEach((product, index) => {
