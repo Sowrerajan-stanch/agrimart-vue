@@ -55,7 +55,10 @@ export default {
 		async login() {
 			if (this.email && this.password) {
 				let res = await this.$auth.login(this.email, this.password);
-				if (res) {
+
+				if (res.full_name === "Administrator") {
+					this.$router.push({ name: "Dashboard" });
+				} else {
 					this.$router.push({ name: "Home" });
 				}
 			}
