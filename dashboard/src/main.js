@@ -8,6 +8,8 @@ import call from "../../../doppio/libs/controllers/call";
 import socket from "../../../doppio/libs/controllers/socket";
 import Auth from "../../../doppio/libs/controllers/auth";
 import ToastService from "primevue/toastservice";
+import VueGoodTablePlugin from "vue-good-table";
+import "vue-good-table/dist/vue-good-table.css";
 
 // Css
 import "primevue/resources/themes/aura-light-green/theme.css";
@@ -21,6 +23,7 @@ app.use(router);
 app.use(resourceManager);
 app.use(PrimeVue);
 app.use(ToastService);
+app.use(VueGoodTablePlugin);
 
 // Global Properties,
 // components can inject this

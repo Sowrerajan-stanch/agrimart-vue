@@ -115,7 +115,6 @@ export default {
 				this.farmers = response.data.message.farmers;
 			} catch (error) {
 				console.error("Error fetching farmers:", error);
-				// Handle error
 			}
 		},
 		async fetchParticularFarmerAnalytics(farmerId, farmer) {

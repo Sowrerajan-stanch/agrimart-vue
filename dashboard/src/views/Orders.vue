@@ -22,7 +22,7 @@
 						<div class="mt-2">
 							<div class="flex items-center mb-2">
 								<i class="pi pi-money-bill text-lg text-gray-600"></i>
-								<span class="ml-2">Total Amount: ${{ order.total_amount }}</span>
+								<span class="ml-2">Total Amount: Rs.{{ order.total_amount }}</span>
 							</div>
 							<div class="flex items-center">
 								<i class="pi pi-check-circle text-lg text-gray-600"></i>
@@ -76,6 +76,13 @@
 						<span class="text-green-500"> {{ selectedOrder.status }}</span>
 					</h2>
 				</div>
+				<div class="flex items-center justify-end">
+					<Button
+						@click="generatePdf"
+						label="Download invoice"
+						class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+					/>
+				</div>
 			</div>
 		</Dialog>
 	</div>
@@ -85,6 +92,11 @@
 import Navbar from "../components/Navbar.vue";
 import axios from "axios";
 import Dialog from "primevue/dialog";
+import Button from "primevue/button";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export default {
 	name: "Orders",
@@ -93,6 +105,7 @@ export default {
 			orders: [],
 			dialogVisible: false,
 			selectedOrder: null,
+			heading: "Stanch.IO",
 		};
 	},
 	mounted() {
@@ -110,6 +123,65 @@ export default {
 				console.error("Error fetching orders:", error);
 			}
 		},
+		generatePdf() {
+			const invoiceData = {
+				name: this.selectedOrder.name,
+				orders: this.selectedOrder,
+			};
+
+			const dd = {
+				pageSize: "B4",
+				content: [
+					{ text: "Stanch.io", style: "header" },
+					{ text: "Bangalore, Karnataka", style: "subheader" },
+					{ text: `Name : ${invoiceData.name}`, style: "info" },
+					{ text: "Orders Info:", style: "subheader" },
+					{
+						table: {
+							headerRows: 1,
+							body: [
+								[
+									"Order ID",
+									"Ordered Date",
+									"Product Name",
+									"Price",
+									"Quantity",
+									"Total Amount",
+								],
+								...invoiceData.orders.products.map((product) => [
+									invoiceData.orders.order_id,
+									invoiceData.orders.ordered_date,
+									product.product_name,
+									product.product_price,
+									product.quantity,
+									product.product_total_amount,
+								]),
+							],
+						},
+					},
+					{ text: `Total Amount: Rs.${invoiceData.orders.total_amount}`, style: "info" },
+					{ text: `Status: ${invoiceData.orders.status}`, style: "info" },
+				],
+				styles: {
+					header: {
+						fontSize: 22,
+						bold: true,
+						margin: [0, 0, 0, 10],
+					},
+					subheader: {
+						fontSize: 18,
+						bold: true,
+						margin: [0, 10, 0, 5],
+					},
+					info: {
+						margin: [0, 0, 0, 5],
+					},
+				},
+			};
+
+			const pdf = pdfMake.createPdf(dd);
+			pdf.open();
+		},
 		showOrderDetails(order) {
 			this.selectedOrder = order;
 			this.dialogVisible = true;
@@ -118,6 +190,7 @@ export default {
 	components: {
 		Navbar,
 		Dialog,
+		Button,
 	},
 };
 </script>

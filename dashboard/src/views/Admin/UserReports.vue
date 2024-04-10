@@ -1,10 +1,45 @@
 <template>
 	<AdminNav />
 	<div class="p-5">
-		<h3 class="text-[2rem] font-semibold mb-2">Users</h3>
+		<div class="flex items-center justify-between">
+			<h3 class="text-[2rem] font-semibold mb-2">Users</h3>
+			<div class="relative">
+				<p>Search</p>
+				<input
+					type="text"
+					v-model="searchValue"
+					class="border p-2 focus:outline-none"
+					@input="handleInputChange"
+					@click="showSuggestions = true"
+				/>
+				<div
+					v-if="showSuggestions"
+					class="w-[500px] border rounded absolute right-28 p-10 bg-white z-10"
+				>
+					<p class="cursor-pointer" @click="showSuggestions = false">X</p>
+					<div
+						v-for="suggestion in filteredSuggestions"
+						:key="suggestion"
+						@click="selectSuggestion(suggestion)"
+						class="cursor-pointer p-2 hover:bg-gray-300"
+					>
+						<p class="font-bold">{{ suggestion.userId }}</p>
+						<div class="flex items-center gap-5 flex-wrap">
+							<p>{{ suggestion.full_name }}</p>
+							<p>{{ suggestion.email }}</p>
+						</div>
+					</div>
+					<div v-if="filteredSuggestions.length == 0">No Users Found!</div>
+				</div>
+			</div>
+		</div>
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+			<div v-if="filteredUsers.length == 0">
+				<p>No Users found</p>
+			</div>
 			<div
-				v-for="(user, index) in users"
+				v-else
+				v-for="(user, index) in filteredUsers"
 				:key="index"
 				class="bg-white rounded-lg shadow-md overflow-hidden"
 			>
@@ -20,7 +55,7 @@
 						<Button
 							label="View Details"
 							class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-							@click.prevent="fetchParticularFarmerAnalytics(user.name, user)"
+							@click.prevent="fetchParticularUserAnalytics(user.name, user)"
 						/>
 					</div>
 				</div>
@@ -87,6 +122,8 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import JsonCSV from "vue-json-csv";
 import * as XLSX from "xlsx";
+import Listbox from "primevue/listbox";
+import { debounce } from "lodash";
 
 export default {
 	name: "UserReports",
@@ -97,6 +134,7 @@ export default {
 		DataTable,
 		Column,
 		JsonCSV,
+		Listbox,
 	},
 	data() {
 		return {
@@ -104,6 +142,8 @@ export default {
 			showDialog: false,
 			userAnalytics: null,
 			currentUser: null,
+			searchValue: null,
+			showSuggestions: false,
 		};
 	},
 	methods: {
@@ -117,7 +157,7 @@ export default {
 				console.error("Error fetching users:", error);
 			}
 		},
-		async fetchParticularFarmerAnalytics(userId, user) {
+		async fetchParticularUserAnalytics(userId, user) {
 			try {
 				const response = await axios.get(
 					`http://agri-app.localhost:8080/api/method/agriapp.agriuser.user_analytics?user=${userId}`
@@ -159,8 +199,6 @@ export default {
 			];
 
 			for (const [product, count] of Object.entries(productCountData)) {
-				// const productCount = { Product: product, Count: count };
-				// formattedData.push(productCount);
 				data[0].push(product);
 				data[1].push(count);
 			}
@@ -184,8 +222,94 @@ export default {
 			link.click();
 			document.body.removeChild(link);
 		},
+		handleInputChange() {
+			if (this.searchValue) {
+				this.showSuggestions = true;
+			} else {
+				this.showSuggestions = false;
+			}
+		},
+
+		selectSuggestion(suggestion) {
+			this.searchValue = suggestion.userId;
+			this.showSuggestions = false;
+		},
+		handleInputChange: debounce(function () {
+			this.showSuggestions = this.searchValue.trim() !== "";
+		}, 300),
 	},
 	computed: {
+		filteredUserIds() {
+			return this.users.map((user) => user.name);
+		},
+		filteredSuggestions() {
+			// Filter based on start value
+			const startsWithFilter = this.users
+				.map((user) => {
+					return {
+						userId: user.name,
+						full_name: user.full_name,
+						email: user.email,
+					};
+				})
+				.filter(
+					(user) =>
+						user.userId.toLowerCase().startsWith(this.searchValue.toLowerCase()) ||
+						user.full_name.toLowerCase().startsWith(this.searchValue.toLowerCase()) ||
+						user.email.toLowerCase().startsWith(this.searchValue.toLowerCase())
+				);
+
+			// Filter based on end value
+			const endsWithFilter = this.users
+				.map((user) => {
+					return {
+						userId: user.name,
+						full_name: user.full_name,
+						email: user.email,
+					};
+				})
+				.filter(
+					(user) =>
+						user.userId.toLowerCase().endsWith(this.searchValue.toLowerCase()) ||
+						user.full_name.toLowerCase().endsWith(this.searchValue.toLowerCase()) ||
+						user.email.toLowerCase().endsWith(this.searchValue.toLowerCase())
+				);
+
+			// Filter based on search key
+			const includesFilter = this.users
+				.map((user) => {
+					return {
+						userId: user.name,
+						full_name: user.full_name,
+						email: user.email,
+					};
+				})
+				.filter(
+					(user) =>
+						user.userId.toLowerCase().includes(this.searchValue.toLowerCase()) ||
+						user.full_name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
+						user.email.toLowerCase().includes(this.searchValue.toLowerCase())
+				);
+
+			return startsWithFilter.length
+				? startsWithFilter
+				: endsWithFilter.length
+				? endsWithFilter
+				: includesFilter;
+		},
+		filteredUsers() {
+			if (!this.searchValue) {
+				return this.users;
+			} else {
+				const suggestedUserIds = this.filteredSuggestions.map((user) =>
+					user.userId.toLowerCase()
+				);
+				return this.users.filter((user) =>
+					suggestedUserIds.includes(user.name.toLowerCase())
+				);
+			}
+		},
+
 		productCountItems() {
 			return Object.entries(this.userAnalytics.products_count).map(([product, count]) => ({
 				product,

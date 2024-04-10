@@ -58,6 +58,8 @@ export default {
 
 				if (res.full_name === "Administrator") {
 					this.$router.push({ name: "Dashboard" });
+				} else if (res.full_name === "vendor") {
+					this.$router.push({ name: "VendorDashboard" });
 				} else {
 					this.$router.push({ name: "Home" });
 				}

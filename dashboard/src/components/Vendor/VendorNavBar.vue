@@ -59,24 +59,24 @@ import { RouterLink } from "vue-router";
 import axios from "axios";
 
 export default {
-	name: "Navbar",
+	name: "VendorNavbar",
 	data() {
 		return {
 			items: [
 				{
 					label: "Home",
 					icon: "pi pi-home",
-					url: "/admin/",
+					url: "/vendor/",
 				},
 				{
-					label: "Users",
+					label: "Products",
+					icon: "pi pi-shopping-bag",
+					url: "/vendor/products",
+				},
+				{
+					label: "Buyers",
 					icon: "pi pi-user",
-					url: "/admin/users",
-				},
-				{
-					label: "Vendors",
-					icon: "pi pi-prime",
-					url: "/admin/farmers",
+					url: "/vendor/buyers",
 				},
 			],
 		};

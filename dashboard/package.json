@@ -10,17 +10,28 @@
     "copy-html-entry": "cp ../agriapp/public/dashboard/index.html ../agriapp/www/dashboard.html"
   },
   "dependencies": {
+    "ag-charts-vue3": "^9.2.0",
     "axios": "^1.6.8",
+    "chart.js": "^4.4.2",
     "frappe-ui": "^0.1.46",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
+    "lodash": "^4.17.21",
+    "pdfmake": "^0.2.10",
     "primeicons": "^7.0.0",
     "primevue": "^3.50.0",
     "socket.io-client": "^4.5.1",
     "vue": "^3.4.21",
+    "vue-chartjs": "^5.3.0",
+    "vue-good-table": "^2.21.11",
     "vue-json-csv": "^2.1.0",
     "vue-router": "^4",
+    "vuejs-paginate": "^2.1.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/jspdf": "^2.0.0",
+    "@types/pdfmake": "^0.2.9",
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
